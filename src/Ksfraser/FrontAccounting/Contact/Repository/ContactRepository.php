@@ -15,6 +15,7 @@ use Ksfraser\FrontAccounting\Contact\DTO\ContactDTO;
  *
  * @package Ksfraser\FrontAccounting\Contact\Repository
  * @since   1.0.0
+ * @BABOK Related: BR-CT-004
  */
 final class ContactRepository
 {
@@ -25,9 +26,10 @@ final class ContactRepository
      * Resolve one person by person id.
      *
      * @param int $personId Person id (crm_persons.id)
-     * @return ContactDTO|null The person, or null when not found
-     * @since 1.0.0
-     */
+ * @return ContactDTO|null The person, or null when not found
+ * @since 1.0.0
+ * @BABOK Related: BR-CT-004
+ */
     public function findById(int $personId): ?ContactDTO
     {
         if ($personId <= 0) {
@@ -53,9 +55,10 @@ final class ContactRepository
      *
      * @param string $email Email address to match
      * @param bool   $includeInactive Include inactive persons
-     * @return ContactDTO[] Matching people
-     * @since 1.0.0
-     */
+ * @return ContactDTO[] Matching people
+ * @since 1.0.0
+ * @BABOK Related: BR-CT-004
+ */
     public function findByEmail(string $email, bool $includeInactive = false): array
     {
         $email = trim($email);
@@ -82,9 +85,10 @@ final class ContactRepository
      * @param string $type     Contact type ('customer', 'cust_branch', …)
      * @param string $entityId The related entity's id
      * @param string|null $action Optional contact action to narrow to
-     * @return ContactDTO[] The entity's contacts
-     * @since 1.0.0
-     */
+ * @return ContactDTO[] The entity's contacts
+ * @since 1.0.0
+ * @BABOK Related: BR-CT-004
+ */
     public function findByEntity(string $type, string $entityId, ?string $action = null): array
     {
         $type     = trim($type);
@@ -114,9 +118,10 @@ final class ContactRepository
     /**
      * Every active person the native relation query can see.
      *
-     * @return ContactDTO[]
-     * @since 1.0.0
-     */
+ * @return ContactDTO[]
+ * @since 1.0.0
+ * @BABOK Related: BR-CT-004
+ */
     public function findActive(): array
     {
         $this->ensureNativeFunctions();

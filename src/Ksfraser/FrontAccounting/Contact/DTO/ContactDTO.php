@@ -13,6 +13,7 @@ namespace Ksfraser\FrontAccounting\Contact\DTO;
  *
  * @package Ksfraser\FrontAccounting\Contact\DTO
  * @since   1.0.0
+ * @BABOK Related: BR-CT-002
  */
 final class ContactDTO
 {
@@ -30,6 +31,9 @@ final class ContactDTO
     public $inactive;
     public $contactId;
 
+    /**
+     * @BABOK Related: BR-CT-002
+     */
     public function __construct(
         int $id,
         string $ref = '',
@@ -60,6 +64,9 @@ final class ContactDTO
         $this->contactId = $contactId;
     }
 
+    /**
+     * @BABOK Related: BR-CT-002
+     */
     public function getDisplayName(): string
     {
         $display = trim($this->name);
@@ -76,6 +83,9 @@ final class ContactDTO
         return $display;
     }
 
+    /**
+     * @BABOK Related: BR-CT-002
+     */
     public function toArray(): array
     {
         return array(
@@ -95,6 +105,9 @@ final class ContactDTO
         );
     }
 
+    /**
+     * @BABOK Related: BR-CT-002
+     */
     public static function fromArray(array $data): self
     {
         return new self(

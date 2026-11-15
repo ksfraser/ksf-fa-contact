@@ -43,6 +43,14 @@ if (!defined('SA_CONTACT_VIEW')) {
     define('SA_CONTACT_MANAGE', SS_ksf_FA_Contact | 2);
 }
 
+/**
+ * Contact module hooks — owns the 'contact' type in RelatedTo, answers
+ * RELATED_TO_FIELDS, CONTACT_RESOLVE and CONTACT_FIELDS.
+ *
+ * @package KsfFA_ksf_FA_Contact
+ * @version 1.0.0
+ * @BABOK Related: BR-CT-001
+ */
 class hooks_ksf_FA_Contact extends hooks {
     /**
      * The hook names this module answers to.
@@ -52,13 +60,22 @@ class hooks_ksf_FA_Contact extends hooks {
     var $module_name = 'ksf_FA_Contact';
     var $version = '1.0.0';
 
+    /**
+     * @BABOK Related: BR-CT-001
+     */
     function install_tabs($app) {
         // Contact is reached via hooks from other modules; no dedicated app tab.
     }
 
+    /**
+     * @BABOK Related: BR-CT-001
+     */
     function install_options($app) {
     }
 
+    /**
+     * @BABOK Related: BR-CT-001
+     */
     function install_access() {
         $security_sections[SS_ksf_FA_Contact] = _("Contact Management");
         $security_areas['SA_CONTACT_VIEW'] = array(SA_CONTACT_VIEW, _("View contacts"));
@@ -67,6 +84,9 @@ class hooks_ksf_FA_Contact extends hooks {
         return array($security_areas, $security_sections);
     }
 
+    /**
+     * @BABOK Related: BR-CT-001
+     */
     function activate_extension($company, $check_only = true) {
         if ($check_only) {
             return true;
@@ -89,6 +109,9 @@ class hooks_ksf_FA_Contact extends hooks {
     // Inter-module discovery contract
     // ------------------------------------------------------------------
 
+    /**
+     * @BABOK Related: BR-CT-001
+     */
     public function getModuleConstants(&$data, $opts = null) {
         $data['constants'] = array(
             'SS_ksf_FA_Contact' => SS_ksf_FA_Contact,
@@ -98,11 +121,17 @@ class hooks_ksf_FA_Contact extends hooks {
         return true;
     }
 
+    /**
+     * @BABOK Related: BR-CT-001
+     */
     public function getModuleCapabilities(&$data, $opts = null) {
         $data['capabilities'] = self::RESPONDERS;
         return true;
     }
 
+    /**
+     * @BABOK Related: BR-CT-001
+     */
     public function hasCapability(&$data, $opts = null) {
         $capability = is_array($opts) && isset($opts['capability']) ? $opts['capability'] : null;
         if ($capability === null && isset($data['capability'])) {
@@ -112,6 +141,9 @@ class hooks_ksf_FA_Contact extends hooks {
         return $data['has_capability'];
     }
 
+    /**
+     * @BABOK Related: BR-CT-001
+     */
     public function respondToCapabilityRequest(&$data, $opts = null) {
         $request = is_array($opts) && isset($opts['request'])
             ? $opts['request']
@@ -150,9 +182,10 @@ class hooks_ksf_FA_Contact extends hooks {
      *
      * @param array $data Modified by reference
      * @param array|null $opts
-     * @return null
-     * @since 1.0.0
-     */
+ * @return null
+ * @since 1.0.0
+ * @BABOK Related: BR-CT-001
+ */
     public function RELATED_TO_FIELDS(&$data, $opts = null) {
         if (!isset($data['module']) || !is_string($data['module'])) {
             $data['error'] = 'RELATED_TO_FIELDS requires data[module]';
@@ -189,9 +222,10 @@ class hooks_ksf_FA_Contact extends hooks {
      *
      * @param array $data Modified by reference
      * @param array|null $opts
-     * @return null
-     * @since 1.0.0
-     */
+ * @return null
+ * @since 1.0.0
+ * @BABOK Related: BR-CT-001
+ */
     public function CONTACT_RESOLVE(&$data, $opts = null) {
         if (!isset($data['person_id']) || !is_numeric($data['person_id'])) {
             $data['error'] = 'CONTACT_RESOLVE requires data[person_id]';
@@ -243,9 +277,10 @@ class hooks_ksf_FA_Contact extends hooks {
      *
      * @param array $data Modified by reference
      * @param array|null $opts
-     * @return null
-     * @since 1.0.0
-     */
+ * @return null
+ * @since 1.0.0
+ * @BABOK Related: BR-CT-001
+ */
     public function CONTACT_FIELDS(&$data, $opts = null) {
         $data['fields'] = array(
             'displayName' => _('Contact'),

@@ -19,6 +19,7 @@ use ksfraser\RelatedTo\DTO\RelatedRecordDto;
  *
  * @package Ksfraser\FrontAccounting\Contact\Service
  * @since   1.0.0
+ * @BABOK Related: BR-CT-001
  */
 final class ContactService
 {
@@ -26,9 +27,10 @@ final class ContactService
     private $repo;
 
     /**
-     * @param ContactRepository|null $repo Contact repository (defaults to new)
-     * @since 1.0.0
-     */
+ * @param ContactRepository|null $repo Contact repository (defaults to new)
+ * @since 1.0.0
+ * @BABOK Related: BR-CT-001
+ */
     public function __construct(?ContactRepository $repo = null)
     {
         $this->repo = $repo ?? new ContactRepository();
@@ -39,9 +41,10 @@ final class ContactService
      *
      * @param int $personId Person id (crm_persons.id)
      * @param RelatedRecordDto|null $dto Optional underlying RelatedRecordDto
-     * @return ContactResolvedDto The resolved contact (empty fields when not found)
-     * @since 1.0.0
-     */
+ * @return ContactResolvedDto The resolved contact (empty fields when not found)
+ * @since 1.0.0
+ * @BABOK Related: BR-CT-001
+ */
     public function resolveById(int $personId, ?RelatedRecordDto $dto = null): ContactResolvedDto
     {
         $contact = $this->repo->findById($personId);
@@ -77,9 +80,10 @@ final class ContactService
      * @param string $entityId The related entity's id
      * @param string|null $action Optional contact action
      * @param RelatedRecordDto|null $parentDto Optional parent RelatedRecordDto
-     * @return ContactResolvedDto[]
-     * @since 1.0.0
-     */
+ * @return ContactResolvedDto[]
+ * @since 1.0.0
+ * @BABOK Related: BR-CT-001
+ */
     public function resolveByEntity(
         string $type,
         string $entityId,
@@ -112,9 +116,10 @@ final class ContactService
      * Return the field map for the contact type (for RELATED_TO_FIELDS
      * consumers building their own Resolved DTOs).
      *
-     * @return array<string, string> Field name => display label
-     * @since 1.0.0
-     */
+ * @return array<string, string> Field name => display label
+ * @since 1.0.0
+ * @BABOK Related: BR-CT-001
+ */
     public function fieldMap(): array
     {
         return array(
