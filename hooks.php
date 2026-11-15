@@ -54,7 +54,7 @@ class hooks_ksf_FA_Contact extends hooks {
     /**
      * The hook names this module answers to.
      */
-    const RESPONDERS = array('RELATED_TO_FIELDS', 'CONTACT_RESOLVE', 'CONTACT_FIELDS');
+    const RESPONDERS = array('RELATED_TO_FIELDS', 'CONTACT_RESOLVE', 'CONTACT_FIELDS', 'crm_register_tabs');
 
     var $module_name = 'ksf_FA_Contact';
     var $version = '1.0.0';
@@ -126,6 +126,26 @@ class hooks_ksf_FA_Contact extends hooks {
     public function getModuleCapabilities(&$data, $opts = null) {
         $data['capabilities'] = self::RESPONDERS;
         return true;
+    }
+
+    /**
+     * crm_register_tabs — registers the ksf_FA_Contact tab with CRM's app shell.
+     *
+     * @param array &$data Modified by reference; 'tabs' array is appended to.
+     */
+    public function crm_register_tabs(&$data)
+    {
+        if (!isset($data['tabs']) || !is_array($data['tabs'])) {
+            $data['tabs'] = [];
+        }
+        $data['tabs'][] = [
+            'key'             => 'contact',
+            'label'           => _('Contacts'),
+            'security'        => 'SA_CONTACT_VIEW',
+            'controller_class'=> 'Ksfraser\\FrontAccounting\\Contact\\Controller\\ContactTabController',
+            'page'            => 'pages/contacts.php',
+            'fa_type'         => MENU_INQUIRY,
+        ];
     }
 
     /**
