@@ -32,8 +32,7 @@ if (file_exists($autoload_path)) {
 require_once __DIR__ . '/includes/common.inc';
 require_once __DIR__ . '/includes/events.inc';
 
-use ksfraser\RelatedTo\DTO\ContactResolvedDto;
-use ksfraser\RelatedTo\DTO\RelatedQueryDto;
+use ksfraser\FrontAccounting\Contact\Service\ContactService;
 use ksfraser\RelatedTo\DTO\RelatedRecordDto;
 
 define('SS_ksf_FA_Contact', 152 << 8);
@@ -239,35 +238,11 @@ class hooks_ksf_FA_Contact extends hooks {
         $personId = (int) $data['person_id'];
         $dto = $data['dto'];
 
-        // Resolve through the shared ContactResolver (hook-first via
-        // ksf_contact_resolve, falls back to FaContactResolver native FA).
-        $resolver = new \ksfraser\FrontAccounting\Common\ContactResolver\ContactResolver();
-        $contact = $resolver->findById($personId);
-
-        if ($contact !== null) {
-            $displayName = $contact->getDisplayName();
-            $contactIndex = $contact->getContactId();
-            if ($contactIndex !== null && $contactIndex > 0) {
-                $displayName .= ' (' . (int) $contactIndex . ')';
-            }
-
-            $resolved = new ContactResolvedDto(
-                $dto,
-                $contact->getName(),
-                $contact->getName2(),
-                $contact->getContactId()
-            );
-            $resolved->setUrl($this->contactUrl($personId));
-            $data['result'] = $resolved;
-        } else {
-            $data['result'] = new ContactResolvedDto(
-                $dto,
-                null,
-                null,
-                null
-            );
-        }
-
+        // Resolve through ContactService (which uses ContactResolver internally,
+        // providing a consistent service-layer pattern with other modules).
+        $service = new ContactService();
+        $result = $service->resolveById($personId, $dto);
+        $data['result'] = $result;
         return null;
     }
 
