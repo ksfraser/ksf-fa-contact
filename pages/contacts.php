@@ -1,56 +1,30 @@
 <?php
-
 declare(strict_types=1);
 
-use Ksfraser\FrontAccounting\Contact\Service\ContactService;
-use ksfraser\RelatedTo\DTO\RelatedQueryDto;
-use ksfraser\RelatedTo\DTO\RelatedRecordDto;
-use ksfraser\RelatedTo\UI\DefaultRelatedRecordsRenderer;
+/**
+ * ksf_FA_Contact — pages/contacts.php. Deprecated forwarder shim.
+ *
+ * @package ksf_FA_Contact
+ * @since   2.0.0
+ * @deprecated 2.0.0 Forwarder to ../index.php?view=contacts
+ */
 
-$path_to_root = '../../..';
+$_GET['view'] = 'contacts';
 
-include_once($path_to_root . '/includes/session.inc');
-add_access_extensions();
-
-$autoload = __DIR__ . '/../vendor/autoload.php';
-if (!file_exists($autoload)) {
-    display_error(_('Contact module dependencies are not installed'));
-    exit;
+if (isset($_SERVER['PHP_SELF'])) {
+    $_SERVER['PHP_SELF'] = preg_replace('#/pages/contacts\.php$#', '/index.php', $_SERVER['PHP_SELF']);
 }
-require_once $autoload;
-
-$service = new ContactService();
-
-$view = isset($_GET['view']) ? (string) $_GET['view'] : 'list';
-
-if ($view === 'list') {
-    page(_('Contacts'));
-    echo '<p>' . _('Contacts') . '</p>';
-    echo '<p>' . _('Contact management is accessed through Related To displays.') . '</p>';
-
-    // Related records rendered via RelatedTo hook
-    $lhsId = isset($_GET['id']) ? (string) $_GET['id'] : '';
-    if (function_exists('hook_invoke') && class_exists(DefaultRelatedRecordsRenderer::class) && $lhsId !== '') {
-        $queryDto = new RelatedQueryDto('contact', $lhsId);
-        $queryResult = $queryDto;
-        hook_invoke('ksf_FA_RelatedTo', 'RELATED_TO', $queryResult, null);
-        if (is_array($queryResult) && isset($queryResult['related']) && is_array($queryResult['related'])) {
-            $renderer = new DefaultRelatedRecordsRenderer(array(
-                'label_resolver' => function ($type, $id) { return (string) $id; },
-                'url_resolver'   => function ($type, $id) { return '#'; },
-                'type_labels'    => array('contact' => _('Contacts')),
-            ));
-            echo $renderer->renderRelatedRecords('contact', $lhsId, $queryResult['related'], array(
-                'css_class' => 'related-records',
-                'header_class' => 'related-header',
-                'table_class' => 'related-table',
-                'table_border' => true,
-            ));
-        }
-    }
-    end_page();
-    exit;
+if (isset($_SERVER['SCRIPT_NAME'])) {
+    $_SERVER['SCRIPT_NAME'] = preg_replace('#/pages/contacts\.php$#', '/index.php', $_SERVER['SCRIPT_NAME']);
+}
+if (isset($_SERVER['REQUEST_URI'])) {
+    $_SERVER['REQUEST_URI'] = preg_replace(
+        '#/pages/contacts\.php(\?|$)#',
+        '/index.php$1',
+        $_SERVER['REQUEST_URI']
+    );
 }
 
-display_error(_('Unknown view'));
-exit;
+chdir(__DIR__ . '/..');
+
+require __DIR__ . '/../index.php';
