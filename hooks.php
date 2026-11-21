@@ -32,7 +32,7 @@ if (file_exists($autoload_path)) {
 require_once __DIR__ . '/includes/common.inc';
 require_once __DIR__ . '/includes/events.inc';
 
-use ksfraser\FrontAccounting\Contact\Service\ContactService;
+use Ksfraser\FrontAccounting\Contact\Service\ContactService;
 use ksfraser\RelatedTo\DTO\RelatedRecordDto;
 
 define('SS_ksf_FA_Contact', 152 << 8);
@@ -257,6 +257,27 @@ class hooks_ksf_FA_Contact extends hooks {
 
         $personId = (int) $data['person_id'];
         $dto = $data['dto'];
+
+        // Give any registered CONTACT_RESOLVE listener first refusal. A
+        // consuming module can inject its own resolver via hook_invoke_all;
+        // only fall back to ContactService when no handler answered.
+        hook_invoke_all('CONTACT_RESOLVE', $data);
+        if (isset($data['result'])) {
+            if ($data['result'] instanceof \ksfraser\RelatedTo\DTO\ContactResolvedDto) {
+                return null;
+            }
+            if (is_array($data['result']) && count($data['result']) > 0) {
+                $contact = $data['result'][0];
+                $data['result'] = new \ksfraser\RelatedTo\DTO\ContactResolvedDto(
+                    $dto,
+                    $contact->getName(),
+                    $contact->getName2(),
+                    $contact->getContactId()
+                );
+                $data['result']->setUrl('/crm/crm_contacts.php?contact_id=' . (int) $contact->getId());
+                return null;
+            }
+        }
 
         // Resolve through ContactService (which uses ContactResolver internally,
         // providing a consistent service-layer pattern with other modules).
